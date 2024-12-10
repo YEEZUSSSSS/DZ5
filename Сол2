@@ -1,0 +1,63 @@
+# Код позволяет пользователю выбрать блюдо из списка и отображает информацию о выбранном блюде.
+
+
+# Импортируемые библиотеки
+import sys
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QMessageBox
+from PyQt6.QtGui import QIcon, QColor
+
+# Класс FoodApp наследуется от класса QWidget и представляет собой основное окно приложения.
+class FoodApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Приложение с едой")  # Заголовок приложения
+        self.setGeometry(100, 100, 400, 300)  # Размеры и положение окна
+        self.setWindowIcon(QIcon("images(1).png"))  # Иконка приложения
+
+        # Установка цвета фона
+        self.setStyleSheet("background-color: #fffacd;")  # Цвет фона
+
+        # Создание вертикального layout
+        self.layout = QVBoxLayout()
+
+        # Заголовок
+        self.label_title = QLabel("Выберите блюдо:")
+        self.label_title.setStyleSheet("font-size: 20px; color: #8b4513;")  # Установка цвета и размера шрифта
+        self.layout.addWidget(self.label_title)
+
+        # Список блюд
+        self.food_list = QListWidget()
+
+        # Добавляем блюда в список
+        dishes = [
+            "Паста",
+            "Пицца",
+            "Салат",
+            "Суп",
+            "Напиток"
+        ]
+
+        for dish in dishes:
+            item = QListWidgetItem(dish)
+            item.setBackground(QColor(255, 228, 196))  # Цвет фона элемента
+            self.food_list.addItem(item)
+
+        self.layout.addWidget(self.food_list)
+
+        # Подключаем метод при выборе блюда
+        self.food_list.itemClicked.connect(self.show_food_info)
+
+        self.setLayout(self.layout)
+    # Метод отображает информацию о выбранном блюде при клике.
+    def show_food_info(self, item):
+        dish_name = item.text()
+        # Здесь можно добавить логику для получения информации о блюде
+        QMessageBox.information(self, "Информация о блюде", f"Вы выбрали: {dish_name}")
+
+
+# Запуск приложения
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    food_window = FoodApp()
+    food_window.show()
+    sys.exit(app.exec())

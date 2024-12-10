@@ -1,0 +1,97 @@
+# Код предоставляет страницу авторизации, 
+# на которой пользователь вводит имя и пароль, 
+# что дает возможность перейти на личную страницу профиля.
+
+
+# Импортируемые библиотеки
+# sys: используем для взаимодействия с интерпретатором Python.
+# PyQt6.QtWidgets: необходимые классы для создания виджетов в приложении.
+# PyQt6.QtGui: классы для работы с графикой, включая иконки и изображения.
+# PyQt6.QtCore: реализация основных функций для работы с сигналами и событиями.
+
+import sys
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtCore import Qt
+
+#Класс LoginPage представляет собой окно для авторизации пользователей.
+class LoginPage(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Авторизация")  # Заголовок окна
+        self.setGeometry(100, 100, 300, 200)  # Позиция и размеры окна
+        self.setWindowIcon(QIcon("images.png"))  # Иконка приложения
+
+        # Установка цвета фона
+        self.setStyleSheet("background-color: #F08080;")  # Цвет фона
+
+        # Создаем вертикальный layout
+        self.layout = QVBoxLayout()
+
+        # Поле для ввода имени пользователя
+        self.label_username = QLabel("Имя пользователя:")
+        self.layout.addWidget(self.label_username)
+
+        self.input_username = QLineEdit()
+        self.layout.addWidget(self.input_username)
+
+        # Поле для ввода пароля
+        self.label_password = QLabel("Пароль:")
+        self.layout.addWidget(self.label_password)
+
+        self.input_password = QLineEdit()
+        self.input_password.setEchoMode(QLineEdit.EchoMode.Password)  # Скрытие пароля
+        self.layout.addWidget(self.input_password)
+
+        # Кнопка для входа
+        self.submit_button = QPushButton("Войти")
+        self.submit_button.clicked.connect(self.handle_login)  # Подключение сигнала
+        self.layout.addWidget(self.submit_button)
+
+        self.setLayout(self.layout)
+    # Обработка входа
+    def handle_login(self):
+        username = self.input_username.text()
+        password = self.input_password.text()
+
+        # Простейшая проверка для демонстрации
+        if username == "admin" and password == "password":
+            self.show_profile_page()
+        else:
+            QMessageBox.warning(self, "Ошибка", "Неправильное имя пользователя или пароль.")
+
+    def show_profile_page(self):
+        self.profile_window = ProfilePage()
+        self.profile_window.show()
+        self.close()  # Закрываем окно авторизации
+
+# Класс ProfilePage представляет собой окно личного профиля пользователя.
+class ProfilePage(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Личный Профиль")
+        self.setGeometry(100, 100, 300, 200)
+
+        # Установка цвета фона
+        self.setStyleSheet("background-color: #FFFFE0;")
+
+        layout = QVBoxLayout()
+
+        self.label_welcome = QLabel("Добро пожаловать в личный профиль!")
+        layout.addWidget(self.label_welcome)
+
+        # Добавление изображения
+        self.image = QLabel()
+        self.pixmap = QPixmap("JPEG_example_down.jpg")  # путь к изображению
+        self.image.setPixmap(self.pixmap)
+        layout.addWidget(self.image)
+
+        self.setLayout(layout)
+
+# Создается экземпляр приложения и отображается экран авторизации.
+# Используется sys.exit(app.exec()) для корректного завершения приложения.
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    login_page = LoginPage()
+    login_page.show()
+    sys.exit(app.exec())
